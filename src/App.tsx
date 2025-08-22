@@ -15,6 +15,7 @@ interface DayData {
   title: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   mapUrl: string;
+  staticMapUrl: string;
   schedule: ScheduleItem[];
 }
 
@@ -45,6 +46,7 @@ const tripData: TripData = {
       title: "四国カルスト + 道後温泉",
       icon: Mountain,
       mapUrl: `https://www.google.com/maps/embed/v1/directions?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&origin=松山空港&destination=道後温泉本館&waypoints=四国カルスト|道の駅天空の郷さんさん&language=ja&region=JP`,
+      staticMapUrl: `https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&markers=color:red|label:S|松山空港&markers=color:blue|label:1|四国カルスト&markers=color:blue|label:2|道の駅天空の郷さんさん&markers=color:green|label:E|道後温泉本館&path=color:0x0000ff|weight:3|松山空港|四国カルスト|道の駅天空の郷さんさん|道後温泉本館&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&language=ja&region=JP`,
       schedule: [
         { time: "09:00", event: "松山空港着 → レンタカー受取", icon: Plane, url: "https://www.matsuyama-airport.co.jp/" },
         { time: "09:15", event: "松山出発 → 四国カルストへ（約2.5h）", icon: Car },
@@ -62,6 +64,7 @@ const tripData: TripData = {
       title: "しまなみ海道ドライブ",
       icon: Waves,
       mapUrl: `https://www.google.com/maps/embed/v1/directions?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&origin=松山市内ホテル&destination=松山空港&waypoints=下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園&language=ja&region=JP`,
+      staticMapUrl: `https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&markers=color:red|label:S|松山市内ホテル&markers=color:blue|label:1|下灘駅&markers=color:blue|label:2|道の駅ふたみ&markers=color:blue|label:3|来島海峡SA&markers=color:blue|label:4|亀老山展望公園&markers=color:green|label:E|松山空港&path=color:0x0000ff|weight:3|松山市内ホテル|下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園|松山空港&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&language=ja&region=JP`,
       schedule: [
         { time: "09:30", event: "ホテル出発", icon: Hotel },
         { time: "10:30", event: "下灘駅（写真スポット）", icon: Camera, url: "https://www.city.iyo.lg.jp/machizukuri/kanko/guidemap/jrshimonada.html" },
@@ -137,7 +140,29 @@ const TimelineItem: React.FC<{
   </div>
 );
 
+const MapComponent: React.FC<{ day: DayData }> = ({ day }) => (
+  <div className="space-y-3">
+    <div className="flex items-center gap-2">
+      <Map className="h-4 w-4 text-muted-foreground" />
+      <h4 className="font-semibold text-sm">ルートマップ</h4>
+    </div>
+    <div className="w-full h-64 rounded-lg overflow-hidden border">
+      <iframe
+        src={day.mapUrl}
+        width="100%"
+        height="100%"
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        title={`Day ${day.day} Route Map`}
+      />
+    </div>
+  </div>
+);
+
 const App: React.FC = () => {
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container max-w-4xl mx-auto py-8 px-4 space-y-8">
@@ -164,24 +189,7 @@ const App: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Route Map */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Map className="h-4 w-4 text-muted-foreground" />
-                    <h4 className="font-semibold text-sm">ルートマップ</h4>
-                  </div>
-                  <div className="w-full h-64 rounded-lg overflow-hidden border">
-                    <iframe
-                      src={day.mapUrl}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title={`Day ${day.day} Route Map`}
-                    />
-                  </div>
-                </div>
+                <MapComponent day={day} />
 
                 {/* Timeline */}
                 <div className="space-y-3">
