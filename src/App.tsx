@@ -45,8 +45,8 @@ const tripData: TripData = {
       day: 1,
       title: "四国カルスト + 道後温泉",
       icon: Mountain,
-      mapUrl: `https://www.google.com/maps/embed/v1/directions?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&origin=松山空港&destination=道後温泉本館&waypoints=四国カルスト|道の駅天空の郷さんさん&language=ja&region=JP`,
-      staticMapUrl: `https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&markers=color:red|label:S|松山空港&markers=color:blue|label:1|四国カルスト&markers=color:blue|label:2|道の駅天空の郷さんさん&markers=color:green|label:E|道後温泉本館&path=color:0x0000ff|weight:3|松山空港|四国カルスト|道の駅天空の郷さんさん|道後温泉本館&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&language=ja&region=JP`,
+      mapUrl: '',
+      staticMapUrl: '',
       schedule: [
         { time: "09:00", event: "松山空港着 → レンタカー受取", icon: Plane, url: "https://www.matsuyama-airport.co.jp/" },
         { time: "09:15", event: "松山出発 → 四国カルストへ（約2.5h）", icon: Car },
@@ -63,8 +63,8 @@ const tripData: TripData = {
       day: 2,
       title: "しまなみ海道ドライブ",
       icon: Waves,
-      mapUrl: `https://www.google.com/maps/embed/v1/directions?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&origin=松山市内ホテル&destination=松山空港&waypoints=下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園&language=ja&region=JP`,
-      staticMapUrl: `https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&markers=color:red|label:S|松山市内ホテル&markers=color:blue|label:1|下灘駅&markers=color:blue|label:2|道の駅ふたみ&markers=color:blue|label:3|来島海峡SA&markers=color:blue|label:4|亀老山展望公園&markers=color:green|label:E|松山空港&path=color:0x0000ff|weight:3|松山市内ホテル|下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園|松山空港&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&language=ja&region=JP`,
+      mapUrl: '',
+      staticMapUrl: '',
       schedule: [
         { time: "09:30", event: "ホテル出発", icon: Hotel },
         { time: "10:30", event: "下灘駅（写真スポット）", icon: Camera, url: "https://www.city.iyo.lg.jp/machizukuri/kanko/guidemap/jrshimonada.html" },
@@ -162,6 +162,21 @@ const MapComponent: React.FC<{ day: DayData }> = ({ day }) => (
 );
 
 const App: React.FC = () => {
+  // 緊急対応：環境変数が効かない場合の直接指定
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAhYkvyTnOOrT32Ipghw4WNv9FbxKp11JU';
+  
+  // マップURLを動的に生成
+  const updatedTripData = {
+    ...tripData,
+    days: tripData.days.map(day => ({
+      ...day,
+      mapUrl: day.day === 1 
+        ? `https://www.google.com/maps/embed/v1/directions?key=${GOOGLE_MAPS_API_KEY}&origin=松山空港&destination=道後温泉本館&waypoints=四国カルスト|道の駅天空の郷さんさん&language=ja&region=JP`
+        : `https://www.google.com/maps/embed/v1/directions?key=${GOOGLE_MAPS_API_KEY}&origin=松山市内ホテル&destination=松山空港&waypoints=下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園&language=ja&region=JP`
+    }))
+  };
+
+  console.log('API Key:', GOOGLE_MAPS_API_KEY);
 
   return (
     <div className="min-h-screen bg-background">
@@ -177,7 +192,7 @@ const App: React.FC = () => {
         </header>
 
         <div className="space-y-6">
-          {tripData.days.map((day) => (
+          {updatedTripData.days.map((day) => (
             <Card key={day.day}>
               <CardHeader>
                 <div className="flex items-center gap-3">
@@ -217,12 +232,12 @@ const App: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Wallet className="h-5 w-5" />
-                {tripData.budget.title}
+                {updatedTripData.budget.title}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {tripData.budget.items.map((item, i) => (
+                {updatedTripData.budget.items.map((item, i) => (
                   <div key={i} className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{item.item}</span>
                     <span>{item.cost}</span>
@@ -231,7 +246,7 @@ const App: React.FC = () => {
                 <div className="border-t pt-2 mt-4">
                   <div className="flex justify-between font-semibold">
                     <span>合計</span>
-                    <span>{tripData.budget.total}</span>
+                    <span>{updatedTripData.budget.total}</span>
                   </div>
                 </div>
               </div>
@@ -242,12 +257,12 @@ const App: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ClipboardList className="h-5 w-5" />
-                {tripData.notes.title}
+                {updatedTripData.notes.title}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
-                {tripData.notes.items.map((note, i) => (
+                {updatedTripData.notes.items.map((note, i) => (
                   <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                     <span className="text-primary mt-1">•</span>
                     <span>{note}</span>
