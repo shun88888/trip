@@ -44,7 +44,7 @@ const tripData: TripData = {
       day: 1,
       title: "四国カルスト + 道後温泉",
       icon: Mountain,
-      mapUrl: "https://www.google.com/maps/embed/v1/directions?key=AIzaSyAhYkvyTnOOrT32Ipghw4WNv9FbxKp11JU&origin=松山空港&destination=道後温泉本館&waypoints=四国カルスト|道の駅天空の郷さんさん&language=ja&region=JP",
+      mapUrl: `https://www.google.com/maps/embed/v1/directions?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&origin=松山空港&destination=道後温泉本館&waypoints=四国カルスト|道の駅天空の郷さんさん&language=ja&region=JP`,
       schedule: [
         { time: "09:00", event: "松山空港着 → レンタカー受取", icon: Plane, url: "https://www.matsuyama-airport.co.jp/" },
         { time: "09:15", event: "松山出発 → 四国カルストへ（約2.5h）", icon: Car },
@@ -61,7 +61,7 @@ const tripData: TripData = {
       day: 2,
       title: "しまなみ海道ドライブ",
       icon: Waves,
-      mapUrl: "https://www.google.com/maps/embed/v1/directions?key=AIzaSyAhYkvyTnOOrT32Ipghw4WNv9FbxKp11JU&origin=松山市内ホテル&destination=松山空港&waypoints=下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園&language=ja&region=JP",
+      mapUrl: `https://www.google.com/maps/embed/v1/directions?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&origin=松山市内ホテル&destination=松山空港&waypoints=下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園&language=ja&region=JP`,
       schedule: [
         { time: "09:30", event: "ホテル出発", icon: Hotel },
         { time: "10:30", event: "下灘駅（写真スポット）", icon: Camera, url: "https://www.city.iyo.lg.jp/machizukuri/kanko/guidemap/jrshimonada.html" },
