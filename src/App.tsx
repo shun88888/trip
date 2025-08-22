@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plane, Car, Coffee, Mountain, Bath, Hotel, UtensilsCrossed, Waves, TowerControl, Camera, Wallet, ClipboardList, ExternalLink, Clock } from 'lucide-react';
+import { Plane, Car, Coffee, Mountain, Bath, Hotel, UtensilsCrossed, Waves, TowerControl, Camera, Wallet, ClipboardList, ExternalLink, Clock, Map } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -14,6 +14,7 @@ interface DayData {
   day: number;
   title: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
+  mapUrl: string;
   schedule: ScheduleItem[];
 }
 
@@ -37,12 +38,13 @@ interface TripData {
 }
 
 const tripData: TripData = {
-  title: "愛媛 1泊2日プラン",
+  title: "西田の心癒しツアー",
   days: [
     {
       day: 1,
       title: "四国カルスト + 道後温泉",
       icon: Mountain,
+      mapUrl: "https://www.google.com/maps/embed/v1/directions?key=AIzaSyAhYkvyTnOOrT32Ipghw4WNv9FbxKp11JU&origin=松山空港&destination=道後温泉本館&waypoints=四国カルスト|道の駅天空の郷さんさん&language=ja&region=JP",
       schedule: [
         { time: "09:00", event: "松山空港着 → レンタカー受取", icon: Plane, url: "https://www.matsuyama-airport.co.jp/" },
         { time: "09:15", event: "松山出発 → 四国カルストへ（約2.5h）", icon: Car },
@@ -59,6 +61,7 @@ const tripData: TripData = {
       day: 2,
       title: "しまなみ海道ドライブ",
       icon: Waves,
+      mapUrl: "https://www.google.com/maps/embed/v1/directions?key=AIzaSyAhYkvyTnOOrT32Ipghw4WNv9FbxKp11JU&origin=松山市内ホテル&destination=松山空港&waypoints=下灘駅|道の駅ふたみ|来島海峡SA|亀老山展望公園&language=ja&region=JP",
       schedule: [
         { time: "09:30", event: "ホテル出発", icon: Hotel },
         { time: "10:30", event: "下灘駅（写真スポット）", icon: Camera, url: "https://www.city.iyo.lg.jp/machizukuri/kanko/guidemap/jrshimonada.html" },
@@ -144,7 +147,7 @@ const App: React.FC = () => {
             <Mountain className="h-8 w-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">愛媛 1泊2日の旅</h1>
+            <h1 className="text-3xl font-bold tracking-tight">西田の心癒しツアー</h1>
           </div>
         </header>
 
@@ -159,14 +162,43 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {day.schedule.map((item, index) => (
-                  <TimelineItem 
-                    key={index} 
-                    item={item} 
-                    isLast={index === day.schedule.length - 1}
-                  />
-                ))}
+              <CardContent className="space-y-6">
+                {/* Route Map */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Map className="h-4 w-4 text-muted-foreground" />
+                    <h4 className="font-semibold text-sm">ルートマップ</h4>
+                  </div>
+                  <div className="w-full h-64 rounded-lg overflow-hidden border">
+                    <iframe
+                      src={day.mapUrl}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title={`Day ${day.day} Route Map`}
+                    />
+                  </div>
+                </div>
+
+                {/* Timeline */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    スケジュール
+                  </h4>
+                  <div className="space-y-4">
+                    {day.schedule.map((item, index) => (
+                      <TimelineItem 
+                        key={index} 
+                        item={item} 
+                        isLast={index === day.schedule.length - 1}
+                      />
+                    ))}
+                  </div>
+                </div>
               </CardContent>
             </Card>
           ))}
