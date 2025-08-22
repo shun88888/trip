@@ -99,30 +99,37 @@ const TimelineItem: React.FC<{
   item: ScheduleItem;
   isLast: boolean;
 }> = ({ item, isLast }) => (
-  <div className="flex items-start gap-4 pb-4">
-    <div className="flex flex-col items-center">
-      <Badge variant="outline" className="h-6 w-16 text-xs font-mono">
-        {item.time}
-      </Badge>
+  <div className="flex items-start gap-3 pb-4">
+    {/* Time Badge - fixed width for consistent alignment */}
+    <div className="flex flex-col items-center flex-shrink-0">
+      <div className="h-8 w-16 flex items-center justify-center">
+        <Badge variant="outline" className="h-6 w-full text-xs font-mono flex items-center justify-center">
+          {item.time}
+        </Badge>
+      </div>
       {!isLast && <div className="w-0.5 h-6 bg-border mt-2" />}
     </div>
-    <div className="flex items-center gap-3 flex-1 pt-0.5">
-      <div className="p-1.5 border rounded-md">
+    
+    {/* Icon - fixed size container for consistent alignment */}
+    <div className="flex-shrink-0">
+      <div className="p-1.5 border rounded-md w-8 h-8 flex items-center justify-center">
         <item.icon size={16} className="text-muted-foreground" />
       </div>
-      <div className="flex items-center justify-between flex-1">
-        <span className="text-sm">{item.event}</span>
-        {item.url && (
-          <a 
-            href={item.url} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ExternalLink size={14} />
-          </a>
-        )}
-      </div>
+    </div>
+    
+    {/* Content - flexible width */}
+    <div className="flex items-center justify-between flex-1 min-w-0 h-8">
+      <span className="text-sm leading-relaxed pr-2">{item.event}</span>
+      {item.url && (
+        <a 
+          href={item.url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+        >
+          <ExternalLink size={14} />
+        </a>
+      )}
     </div>
   </div>
 );
@@ -138,7 +145,6 @@ const App: React.FC = () => {
           </div>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">愛媛 1泊2日の旅</h1>
-            <p className="text-muted-foreground">絶景と癒やしを巡る、よくばりプラン</p>
           </div>
         </header>
 
